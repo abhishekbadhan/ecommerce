@@ -81,9 +81,9 @@ def checkout(request):
             order_id=cntc.id, update_desc='successfully order is placed')
         upor.save()
         # requestind for the ptm request
-        MERCHANT_KEY = 'Uv1gt5O3u2mW8aji'
+        MERCHANT_KEY = #ADD YOUR OWN
         param_dict = {
-            'MID': 'hyXvwS67606907268138',
+            'MID': #ADD YOU OWN,
             'ORDER_ID': str(cntc.id),
             'TXN_AMOUNT': str(pr),
             'CUST_ID': str(zip),
