@@ -154,7 +154,7 @@ def search(request):
 @csrf_exempt
 def handlerequest(request):
     form = request.POST
-    MERCHANT_KEY = 'Uv1gt5O3u2mW8aji'
+    MERCHANT_KEY = # ADD YOUR OWN
     respons_dict = {}
     for i in form.keys():
         respons_dict[i] = form[i]
