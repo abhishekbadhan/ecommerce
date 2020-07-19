@@ -1,0 +1,10 @@
+{% extends 'basic.html' %}
+{% block title %}PAYMENT STATUS{% endblock %}
+
+{% block body %}
+<img src="https://cdn.dribbble.com/users/1238709/screenshots/4069900/success_celebration_800x600.gif" alt="Done">
+<h2 style="text-align: center;" >PAYMENT DONE SUCCESSFULLY</h2>
+<h1>ORDER DETAILS:-</h1>
+<h5>ORDER_ID :- {{response.ORDERID}}</h5>
+<h5>TOTAL AMOUNT :- {{response.TXNAMOUNT}}</h5>
+{% endblock %}

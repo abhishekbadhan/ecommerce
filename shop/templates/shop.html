@@ -1,0 +1,162 @@
+{% extends 'basic.html' %}
+
+{% block title %}SHOP{% endblock %}
+
+{% block body %}
+
+
+<!-- SLIDER -->
+<div class="container" id="body_part" style="padding-top: 84px;">
+    <div id="carouselExampleInterval" class="carousel slide" data-ride="carousel">
+        <div class="carousel-inner">
+            <div class="carousel-item active" data-interval="1000">
+                <div class="container">
+                    <div class="row">
+                        {% for i in rep %}
+                        <div class="card text-white col-sm-6" style="border: 0px;">
+                            <img src="/media/{{i.product_image}}" width="300" height="300" class="card-img-top"
+                                alt="...">
+                            <div class="card-img-overlay">
+                                <b style="color:black" id="prodadd{{i.id}}">{{i.product_name}}</b>
+                                <a href="/shop/aboutproduct/{{i.id}}" class="btn btn-primary "
+                                    style="margin-top: 180px;">View</a>
+                                <span class="add">
+                                    <a id="ad{{i.id}}" class="btn btn-danger "
+                                        style="margin-top: 180px; z-index: 12;">ADD</a>
+                                </span>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <!-- NO OF SLIDES -->
+            {% for i in rep %}
+            <div class="carousel-item" data-interval="100000" style="text-align: center;">
+                <div class="container">
+                    <div class="row">
+                        {% for i in rep %}
+                        <div class="card text-white col-6 col-sm-6 col-md-4 col-xl-3" style="border: 0px;">
+                            <img src="/media/{{i.product_image}}" width="300" height="300" class="card-img-top"
+                                alt="...">
+                            <div class="card-img-overlay">
+                                <b type="hidden" style="color:black" id="prodad{{i.id}}">{{i.product_name}}</b>
+                                <div style="padding: 8px;">
+                                    <a href="/shop/aboutproduct/{{i.id}}" class="btn btn-primary "
+                                        style="margin-top: 124px;">View</a>
+                                    <a id="adbuttons{{i.id}}" class="btn btn-danger addss">ADD</a>
+                                </div>
+                                <b style="color: black; line-height: 10px;" id="price{{i.id}}">{{i.product_price}}</b>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <a class=" carousel-control-prev" href="#carouselExampleInterval" role="button" data-slide="prev"
+            style="position: fixed; margin-bottom: 191px;">
+            <span class="carousel-control-prev-icon" style="background-color: forestgreen;" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#carouselExampleInterval" role="button" data-slide="next"
+            style="position: fixed; margin-bottom: 191px;">
+            <span class="carousel-control-next-icon" style="background-color: forestgreen;" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+        </a>
+    </div>
+</div>
+<!-- SCRIPT -->
+<script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+    crossorigin="anonymous"></script>
+<script>
+
+    // MEMORY FUNCTION
+    function memory() {
+        if (localStorage.getItem('mycart') == null) {
+            mycart = {}
+        }
+        else {
+            mycart = JSON.parse(localStorage.getItem('mycart'))
+        }
+        console.log(mycart)
+        cartnum = 0
+        for (var val in mycart) {
+            cartnum = cartnum + mycart[val][0]
+        }
+        document.getElementById('cartnumber').innerText = cartnum
+
+    }
+    memory()
+    pop()
+
+
+    // POPOVER FUNCTION
+    function pop() {
+        str = "<h3>ITEMS ARE :-</h3>"
+        for (var i in mycart) {
+            c = i.slice(9)
+            str = str + document.getElementById('prodad' + c).innerText + "<b> quantity :-" + mycart[i][0] + "</b>" + "<em>   ||   </em>" + "<b>" + mycart[i][2] + "</b>" + "<hr style='margin:1px'>"
+        }
+        if (cartnum != 0) {
+            str = str + "<a href='/shop/checkout/' class='btn btn-outline-success' >Checkout</a><a id='close11' class='btn btn-danger my-3' >CLOSE</a>"
+        }
+        else {
+            str = "<h5><b>CART IS EMPTY naa!</b></h5>"
+        }
+        document.getElementById('popover1').setAttribute('data-content', str)
+    }
+
+
+    $('#close11').click(function() {
+        // $('#popover1').popover('hide')
+        console.log('this is great')
+    })
+    
+
+
+    // CLICKING ON BUTTON
+    $('.addss').click(function () {
+        prod_id = this.id.toString()
+        if (mycart[prod_id] == undefined) {
+            mycart[prod_id] = []
+            mycart[prod_id][0] = 1
+            mycart[prod_id][1] = document.getElementById('prodad' + prod_id.slice(9)).innerText
+            mycart[prod_id][2] = document.getElementById('price' + prod_id.slice(9)).innerText
+            console.log('this is id', prod_id.slice(9))
+        }
+        else {
+            mycart[prod_id][0] = mycart[prod_id][0] + 1
+        }
+        localStorage.setItem('mycart', JSON.stringify(mycart))
+        memory()
+        pop()
+        $('#popover1').popover('show')
+    })
+
+
+
+
+
+    // CLEAR CART
+    function clearcart() {
+        localStorage.clear()
+        // $('#popover1').popover('hide')
+        memory()
+        pop()
+        $('#popover1').popover('show')
+    }
+
+
+    // BODY_PART
+    $('#body_part').mouseenter(function () {
+        $('#popover1').popover('hide')
+    })
+
+
+
+
+
+</script>
+{% endblock %}

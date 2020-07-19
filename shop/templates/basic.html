@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <title>{% block title %}{% endblock %}</title>
+</head>
+
+<body style="z-index: 0;">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark" style="position: fixed; width: 100%; z-index:1080;">
+        <a class="navbar-brand" href="/shop/">SHOP</a>
+
+        <div style="z-index: 10;">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- CART NUMBER -->
+            <button type="button" class="btn btn-secondary" id="popover1" data-container="body" data-toggle="popover" data-placement="bottom" data-html='true' data-content="your cart">
+                Notifications <span class="badge badge-light" id="cartnumber"></span>
+            </button>
+            <!-- CLEAR BUTTON -->
+            <button class="btn btn-outline-danger" id="clearcart" onclick="clearcart()">Clear CART</button>
+            <!-- CREATING SIGNUP -->
+            <!-- Button trigger modal -->
+            {% if not user.is_authenticated %}
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#staticBackdrop">
+                SIGN IN
+            </button>
+
+            <!-- Modal -->
+            <div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="staticBackdropLabel">SIGN UP</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form class="w3-container" action="signup/" method="POST"> {% csrf_token %}
+                                <label>Name</label>
+                                <input class="w3-input" name="inputname" type="text" required>
+
+                                <label>Email</label>
+                                <input class="w3-input" name="address" type="email" required>
+
+                                <label>Phone</label>
+                                <input class="w3-input" name="number" type="text" required>
+
+                                <label>Password</label>
+                                <input class="w3-input" name="password1" type="password" required>
+
+                                <label>Confirm Password</label>
+                                <input class="w3-input" name="confirmpassword" type="password" required>
+
+                                <label>D.O.B</label>
+                                <input class="w3-input" name="date1" type="date" required>
+                                <button type="submit" class="btn btn-primary my-4 ">SIGNUP</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- LOG IN -->
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#drop1">
+                LOG IN
+            </button>
+            <!-- Modal -->
+            <div class="modal fade" id="drop1" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="Label1" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="Label1">LOG IN</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form class="w3-container" action="/shop/login/" method="POST">{% csrf_token %}
+                                <label>Name</label>
+                                <input class="w3-input" name="loginname" type="email" placeholder="email" required>
+
+                                <label>Password</label>
+                                <input class="w3-input" name="loginpassword" type="password" placeholder="password" required>
+                                <button type="submit" class="btn btn-primary my-4 ">LOG IN </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <a href="/shop/logout/" class="btn btn-success">LOG OUT</a>
+            <b style="color: wheat;">WELCOME! {{request.user.first_name}}</b> {% endif %}
+            <!-- NAVIGATION -->
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/shop/">Shop <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/shop/tracker/">Tracker</a>
+                    </li>
+                </ul>
+                <form method="GET" action="/shop/search/" class="form-inline my-2 my-lg-0">
+                    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="search" id="search">
+                    <button class="btn btn-success my-2 my-sm-0">Search</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+
+
+
+
+    {% block body %}{% endblock %}
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+    <!-- <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+            integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+            crossorigin="anonymous"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+    <!-- <script>$('#popover1').popover('show')</script> -->
+</body>
+
+</html>

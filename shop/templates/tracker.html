@@ -1,0 +1,86 @@
+{% extends 'basic.html' %}
+
+{% block title %}TRACKER{% endblock %}
+
+{% block body %}
+<div class="container" style="padding-top: 60px;">
+    <h2>TRACK FROM HERE :-</h2>
+    <form action="/shop/tracker/" method="POST" id="trackerform">{% csrf_token %}
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="inputname">ORDER ID</label>
+                <input type="name" class="form-control" name="order_id" id="order_id">
+            </div>
+            <div class="form-group col-md-6">
+                <label for="inputzip">ZIP</label>
+                <input type="name" class="form-control" name="cuszip" id="cuszip">
+            </div>
+        </div>
+        <button type="submit" class="btn btn-outline-warning">TRACK NOW</button>
+    </form>
+
+    <h2 style="padding-top: 20px;">YOU TRACKING STATUS :-</h2>
+    <span id="items">
+        this is great
+    </span>
+    <h2 style="padding-top: 20px;">YOU ITEMS :-</h2>
+    <span id="myitems">
+        this is great
+    </span>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+    crossorigin="anonymous"></script>
+<script>
+    trackstatus = document.getElementById('items')
+    $('#trackerform').submit(function (event) {
+        $('#items').empty();
+        var formdata = {
+            'order_id': $('input[name = order_id]').val(),
+            'order_zip': $('input[name = cuszip]').val(),
+            'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+        };
+        // console.log(formdata)
+        // APPLING AJAX
+        $.ajax({
+            type: "POST",
+            url: '/shop/tracker/',
+            data: formdata,
+            encode: true
+        })
+            .done(function (data) {
+                console.log(data)
+                updates = JSON.parse(data)
+                track = updates[0]
+                console.log(track)
+                items = JSON.parse(updates[1])
+                console.log(items)
+                // WATCHING THE TRACK
+                if (track.length > 0 & track != {}) {
+                    str = ''
+                    for (i = 0; i < track.length; i++) {
+                        str = str + `<li class='list-group-item d-flex justify-content-between align-items-center'> ${track[i]['item']}<span class='badge badge-primary badge-pill' >${track[i]['time']}</span ></li >`
+                    }
+                }
+                else {
+                    str = `<li class='list-group-item d-flex justify-content-between align-items-center'> YOUR ID MAY BE WRONG</li >`
+                }
+                trackstatus.innerHTML = str
+                //WATCHING THE ITEMS
+                str = ''
+                for (var i in items) {
+                    str = str + `<li class='list-group-item d-flex justify-content-between align-items-center'> ${items[i][1]}<span class='badge badge-primary badge-pill' >${items[i][0]}</span ><span class='badge badge-primary badge-pill' >RS :-${items[i][2]}</span ></li >`
+                }
+                document.getElementById('myitems').innerHTML = str
+
+
+
+            });
+        event.preventDefault();
+    });
+
+
+</script>
+{% endblock %}
+
+</html>

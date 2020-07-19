@@ -1,0 +1,104 @@
+{% extends 'basic.html' %}
+
+{% block title %}CHECKOUT{% endblock %}
+
+{% block body %}
+
+<div class="container">
+    <h2 style="padding-top: 110px;">YOUR ITEMS</h2>
+    <ul class="list-group" id="check">
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            Cras justo odio
+            <span class="badge badge-primary badge-pill">14</span>
+        </li>
+    </ul>
+    <hr>
+    <h2>ADD YOUR DETAILS HERE</h2>
+    <form action="/shop/checkout/" method="POST">{% csrf_token %}
+        <input type="hidden" id="itemsJson" name="itemsJson">
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="inputname">Name</label>
+                <input type="name" class="form-control" id="inputname" name="inputname">
+            </div>
+            <div class="form-group col-md-6">
+                <label for="inputpassword">Password</label>
+                <input type="password" class="form-control" id="inputPassword" name="inputpassword">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputAddress">Address</label>
+            <input type="text" class="form-control" id="inputAddress" placeholder="4693,Maloya colony"
+                name="inputaddress">
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="inputCity">City</label>
+                <input type="text" class="form-control" id="inputCity" name="inputcity">
+            </div>
+            <div class="form-group col-md-4">
+                <label for="inputState">State</label>
+                <select id="inputState" class="form-control" name="inputstate">
+                    <option selected>Choose...</option>
+                    <option>Chandigarh</option>
+                    <option>Himachal</option>
+                    <option>Delhi</option>
+                    <option>Jammu</option>
+                </select>
+            </div>
+            <div class="form-group col-md-2">
+                <label for="inputZip">Zip</label>
+                <input type="text" class="form-control" id="inputZip" name="inputzip">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="gridCheck">
+                <label class="form-check-label" for="gridCheck">
+                    Check me out
+                </label>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-outline-warning" id="checkout1">CHECKOUT</button>
+    </form>
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+    crossorigin="anonymous"></script>
+<script>
+    mycart = JSON.parse(localStorage.getItem('mycart'))
+    // STEP1
+    str = ``
+    for (var item in mycart) {
+        str = str + `<li class='list-group-item d-flex justify-content-between align-items-center'> ${mycart[item][1]}<span class='badge badge-primary badge-pill' >${mycart[item][0]}</span ><b>X RS.${mycart[item][2]}</b></li >`
+    }
+    // DECIDING THE PRICE
+    totalitems = 0
+    totalprice = 0
+    for (var item in mycart) {
+        totalitems = totalitems + mycart[item][0]
+        totalprice = totalprice + (mycart[item][0] * parseInt(mycart[item][2]))
+    }
+    str = str + `<li class='list-group-item d-flex justify-content-between align-items-center' style='border:2px solid green'>TOTAL<span class='badge badge-primary badge-pill' >${totalitems}</span ><b>RS.${totalprice}</b></li>`
+    document.getElementById('check').innerHTML = str
+
+
+    // GIVING ITEMS INTO PYTHON FROM JS
+    $('#itemsJson').val(localStorage.getItem('mycart'));
+
+    // CHECKOUT1
+    console.log('this is running')
+    {% if my_result %}
+    alert('Your request is received . you product id is : {{id}}')
+    console.log('this is true')
+    document.location = '/shop'
+    localStorage.clear()
+    {% endif %}
+
+
+</script>
+
+
+
+{% endblock %}
